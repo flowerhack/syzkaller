@@ -24,10 +24,12 @@ define newline
 
 
 endef
+
+GO := /usr/local/google/home/flowerhack/starwolf/fuchsia/out/x64/goroot/bin/go
 ENV := $(subst \n,$(newline),$(shell \
 	SOURCEDIR=$(SOURCEDIR) HOSTOS=$(HOSTOS) HOSTARCH=$(HOSTARCH) \
 	TARGETOS=$(TARGETOS) TARGETARCH=$(TARGETARCH) TARGETVMARCH=$(TARGETVMARCH) \
-	go run tools/syz-env/env.go))
+	/usr/local/google/home/flowerhack/starwolf/fuchsia/out/x64/goroot/bin/go run tools/syz-env/env.go))
 $(info $(ENV))
 $(eval $(ENV))
 ifeq ("$(NCORES)", "")
@@ -36,14 +38,12 @@ endif
 MAKEFLAGS += " -j$(NCORES) "
 export MAKEFLAGS
 
-GO := go
 # By default, build all Go binaries as static. We don't need cgo and it is
 # known to cause problems at least on Android emulator.
 export CGO_ENABLED=0
 
 ifeq ("$(TARGETOS)", "fuchsia")
 	# SOURCEDIR should point to fuchsia checkout.
-	GO = $(SOURCEDIR)/buildtools/go
 	export CGO_ENABLED=1
 	ifeq ("$(TARGETARCH)", "amd64")
 		export GOROOT=$(SOURCEDIR)/out/x64/goroot
