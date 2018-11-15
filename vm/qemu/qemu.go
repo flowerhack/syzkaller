@@ -352,6 +352,9 @@ func (inst *instance) Boot() error {
 		log.Logf(0, "running command: %v %#v", inst.cfg.Qemu, args)
 	}
 	qemu := osutil.Command(inst.cfg.Qemu, args...)
+	fmt.Printf("THE QEMU COMMAND IS\n")
+	fmt.Printf("%+v\n", *qemu)
+
 	qemu.Stdout = inst.wpipe
 	qemu.Stderr = inst.wpipe
 	if err := qemu.Start(); err != nil {
@@ -361,6 +364,7 @@ func (inst *instance) Boot() error {
 	inst.wpipe = nil
 	inst.qemu = qemu
 	// Qemu has started.
+	fmt.Printf("Qemu has started\n")
 
 	// Start output merger.
 	var tee io.Writer
@@ -384,8 +388,10 @@ func (inst *instance) Boot() error {
 			}
 		}
 	}()
+	fmt.Printf("Attempting to ssh....\n")
 	if err := vmimpl.WaitForSSH(inst.debug, 10*time.Minute, "localhost",
 		inst.sshkey, inst.sshuser, inst.os, inst.port); err != nil {
+		fmt.Printf("OH NO SSH ERROR\n")
 		bootOutputStop <- true
 		<-bootOutputStop
 		return vmimpl.BootError{Title: err.Error(), Output: bootOutput}

@@ -21,14 +21,14 @@ func (fu fuchsia) build(targetArch, vmType, kernelDir, outputDir, compiler, user
 		return fmt.Errorf("unsupported fuchsia arch %v", targetArch)
 	}
 	arch := sysTarget.KernelHeaderArch
-	if _, err := osutil.RunCmd(time.Hour, kernelDir, "scripts/fx", "clean-build", arch,
-		"--packages", "garnet/packages/products/sshd",
-		"--args=extra_authorized_keys_file=\"//.ssh/authorized_keys\""); err != nil {
-		return err
-	}
+	//if _, err := osutil.RunCmd(time.Hour, kernelDir, "scripts/fx", "full-build"); err != nil {
+	//if _, err := osutil.RunCmd(time.Hour, kernelDir, "scripts/fx", "clean-build", arch,
+		//"--args", `extra_authorized_keys_file="//.ssh/authorized_keys"`,
+		//"--packages", "garnet/packages/products/sshd"); err != nil {
+		//return err
+	//}
 	for src, dst := range map[string]string{
 		"out/" + arch + "/obj/build/images/fvm.blk":         "image",
-		"out/" + arch + "/ssh-keys/id_ed25519":              "key",
 		"out/build-zircon/build-" + arch + "/zircon.elf":    "obj/zircon.elf",
 		"out/build-zircon/build-" + arch + "/multiboot.bin": "kernel",
 		"out/" + arch + "/fuchsia.zbi":                      "initrd",

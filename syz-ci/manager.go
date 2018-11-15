@@ -227,6 +227,8 @@ func (mgr *Manager) pollAndBuild(lastCommit string, latestInfo *BuildInfo) (
 				mgr.compilerID != latestInfo.CompilerID ||
 				mgr.configTag != latestInfo.KernelConfigTag) {
 			lastCommit = commit.Hash
+			fmt.Printf("Let's not build the kernel today.\n")
+			
 			select {
 			case kernelBuildSem <- struct{}{}:
 				log.Logf(0, "%v: building kernel...", mgr.name)
