@@ -397,7 +397,7 @@ func fetchBugs(c context.Context, r *http.Request) ([]*uiBugNamespace, error) {
 
 func fetchNamespaceBugs(c context.Context, accessLevel AccessLevel, ns string,
 	state *ReportingState, onlyFixed bool) (*uiBugNamespace, error) {
-	query := datastore.NewQuery("Bug").Filter("Namespace=", ns)
+	query := datastore.NewQuery("Bug").Filter("Namespace=", ns).Order("LastTime")
 	if onlyFixed {
 		query = query.Filter("Status=", BugStatusFixed)
 	}
